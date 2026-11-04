@@ -1,0 +1,54 @@
+{% extends 'partials/layout.njk' %}
+{% block content %}
+    <h1>Home Page</h1>
+    <div class="row">
+        {% for movie in movies %}
+            <div class="col-3 mb-3">
+                <div class="card h-100">
+                    <img src="{{ movie.image }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.name }}</h5>
+                        <p class="card-text">{{ movie.snippet }}</p>
+                        <p class="card-text text-secondary">{{ movie.createdAt.toRelative() }}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2>My home</h2>
+    <button id="go-home" class="btn btn-primary">Go to home</button>
+    <div id="map" style="height: 400px; margin-top: 10px;"></div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      const home = [59.378677, 24.709256];
+
+      const map = L.map('map').setView(home, 17);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Marker at home
+      L.marker(home).addTo(map).bindPopup('Home');
+
+           // Polygon around home (6 uneven corners)
+      L.polygon([
+        [59.37925, 24.70890],
+        [59.37935, 24.70985],
+        [59.37890, 24.71040],
+        [59.37825, 24.70995],
+        [59.37810, 24.70900],
+        [59.37860, 24.70840]
+      ], { color: 'red', fillColor: '#f03', fillOpacity: 0.3 }).addTo(map);
+
+      // "Go to home" button
+      document.getElementById('go-home').addEventListener('click', () => {
+        map.setView(home, 17);
+      });
+    </script>
+{% endblock %}
